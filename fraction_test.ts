@@ -34,3 +34,66 @@ Deno.test("1/3 + 2/6 = 2/3 is roughly 0.67", () => {
   // Assert
   assertAlmostEquals(left.toFloat(0.01), 0.67);
 });
+
+Deno.test("cancel() reduces 2/4 to 1/2", () => {
+  // Arrange
+  const fraction = new Fraction(2, 4);
+
+  // Act
+  fraction.cancel();
+
+  // Assert
+  assertEquals(fraction.toString(), "1/2");
+});
+
+Deno.test("constructor auto-cancels 6/9 to 2/3", () => {
+  // Arrange
+  const fraction = new Fraction(6, 9);
+
+  // Assert
+  assertEquals(fraction.toString(), "2/3");
+});
+
+Deno.test("parse auto-cancels 10/25 to 2/5", () => {
+  // Act
+  const fraction = Fraction.parse("10/25");
+
+  // Assert
+  assertEquals(fraction.toString(), "2/5");
+});
+
+Deno.test("auto-cancel after subtract", () => {
+  // Arrange
+  const left = new Fraction(3, 4);
+  const right = new Fraction(1, 4);
+
+  // Act
+  left.subtract(right);
+
+  // Assert
+  assertEquals(left.toString(), "1/2");
+});
+
+Deno.test("auto-cancel after multiply", () => {
+  // Arrange
+  const left = new Fraction(2, 3);
+  const right = new Fraction(3, 4);
+
+  // Act
+  left.multiply(right);
+
+  // Assert
+  assertEquals(left.toString(), "1/2");
+});
+
+Deno.test("auto-cancel after divide", () => {
+  // Arrange
+  const left = new Fraction(1, 2);
+  const right = new Fraction(3, 4);
+
+  // Act
+  left.divide(right);
+
+  // Assert
+  assertEquals(left.toString(), "2/3");
+});
